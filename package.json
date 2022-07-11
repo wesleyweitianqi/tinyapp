@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/wesleyweitianqi/tinyapp/issues"
   },
-  "homepage": "https://github.com/wesleyweitianqi/tinyapp#readme"
+  "homepage": "https://github.com/wesleyweitianqi/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
