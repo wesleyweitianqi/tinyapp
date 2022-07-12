@@ -47,16 +47,16 @@ app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
-  res.send(urlDatabase); // Respond with 'Ok' (we will replace this)
-  
-  
-  });
+  res.redirect('/urls'); // Respond with 'Ok' (we will replace this)
+});
 
 
 app.get('/urls/:id', (req,res) => {
-  const templateVars = {id: 'b2xVn2', longURL: "http://www.lighthouselabs.ca" };
+
+  const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]};
   res.render('urls_show', templateVars);
 })
+
 
 app.get("/u/:id", (req, res) => {
   // const longURL = ...
@@ -64,14 +64,10 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
-app.get("/set", (req, res) => {
-  const a = 1;
-  res.send(`a = ${a}`);
- });
- 
- app.get("/fetch", (req, res) => {
-  res.send(`a = ${a}`);
- });
+app.post('/urls/:id/delete',(req,res) => {
+  delete urlDatabase[req.params.id]
+  res.redirect('/urls');
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
