@@ -1,5 +1,7 @@
 const express = require('express');
 const res = require('express/lib/response');
+const cookie = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const app = express();
 const port = 8080; 
 const generateRandomString = function() {
@@ -15,6 +17,7 @@ const generateRandomString = function() {
 app.set('view engine', 'ejs');
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -35,13 +38,18 @@ app.get('/hello', (req,res) => {
 });
 
 app.get('/urls', (req,res) => {
-  const templateVars = {urls: urlDatabase};
+  const templateVars = {urls: urlDatabase, username: undefined};
+  console.log(req.cookies)
+  if (req.cookies.username) {
+    templateVars.username = req.cookies['username']
+  }
   res.render('urls_index', templateVars);
 });
 
 //new longUrl input 
 app.get('/urls/new', (req,res) => {
-  res.render("urls_new");
+  const templateVars = {username: req.cookies['username']}
+  res.render("urls_new", templateVars);
 })
 
 // add shortUrl and LongUrl to index page
@@ -58,6 +66,7 @@ app.get('/urls/:id', (req,res) => {
   res.render('urls_show', templateVars);
 })
 
+
 app.post('/urls/:id', (req,res) => {
   const inputLongUrl = req.body.longURL;
   urlDatabase[req.params.id] = req.body.longURL
@@ -69,6 +78,20 @@ app.post('/urls/:id/delete',(req,res) => {
   delete urlDatabase[req.params.id]
   res.redirect('/urls');
 })
+
+app.post('/login', (req, res) => {
+  res
+  .cookie('username', req.body.username, {path: '/urls'})
+  .redirect('/urls');   
+})
+
+app.post('/logout', (req, res) => {
+  res
+    .clearCookie('username', {path: '/urls'})
+    .redirect('/urls')
+    
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
