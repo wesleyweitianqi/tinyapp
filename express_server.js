@@ -46,6 +46,14 @@ const lookup = function(email) {
   return null;
 }
 
+const shortUrlLookup = function(id) {
+  if (urlDatabase[id]) {
+    return urlDatabase[id];
+  }
+  return null;
+}
+
+
 const creatUserRandomID = function() {
   const len=Object.keys(users).length;
   let randomID = 'user' + (len+1) +'RandomID';
@@ -67,15 +75,25 @@ app.get('/urls.json', (req,res) => {
 // });
 
 app.get('/urls', (req,res) => {
-  const templateVars = {urls: urlDatabase, email: users[req.cookies.user_id].email};
-  res.render('urls_index', templateVars);
+  if (!req.cookies.user_id) {
+    return res.redirect('/login')
+  } else {
+    const templateVars = {urls: urlDatabase, email: users[req.cookies.user_id].email};
+    res.render('urls_index', templateVars);
+
+  }
 });
 
 //new longUrl input 
 app.get('/urls/new', (req,res) => {
-  
-  const templateVars = {email : users[req.cookies.user_id].email}
-  res.render("urls_new", templateVars);
+  console.log(req.cookies.user_id)
+  if (!req.cookies.user_id) {
+    return res.redirect('/login')
+  } else {
+    const templateVars = {email : users[req.cookies.user_id].email}
+    res.render("urls_new", templateVars);
+
+  }
 })
 
 //add shortUrl and LongUrl to index page
@@ -88,9 +106,13 @@ app.post("/urls/new", (req, res) => {
 
 //creat new route by template
 app.get('/urls/:id', (req,res) => {
-  const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]};
-  console.log(users)
-  res.render('urls_show', templateVars);
+  if (!shortUrlLookup(req.params.id)) {
+    return res.send("Page Not Found")
+  } else {
+    const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]};
+    console.log(users)
+    res.render('urls_show', templateVars);
+  }
 })
 
 app.post('/urls/:id', (req,res) => {
