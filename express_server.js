@@ -144,6 +144,14 @@ app.post('/urls/:id', (req,res) => {
   res.redirect('/urls');
 })
 
+app.get('/u/:id', (req, res) => {
+  if (!urlDatabase[req.params.id].longURL) {
+    return res.send('That short URL does not exist')
+  }
+  const longURL = urlDatabase[req.params.id].longURL
+  res.redirect(longURL);
+})
+
 app.post('/urls/:id/delete',(req,res) => {
   const body =req.body.id;
   delete urlDatabase[req.params.id]
