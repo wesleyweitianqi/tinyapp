@@ -1,13 +1,18 @@
+require('dotenv').config();
 const express = require('express');
 const res = require('express/lib/response');
 const cookie = require('cookie-parser');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
+
+
 const app = express();
 const port = 8080; 
 app.set('view engine', 'ejs');
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+
 
 const generateRandomString = function() {
   let string = '';
@@ -52,7 +57,6 @@ const users = {
     password: "dishwasher-funk",
   },
 };
-
 //login emailLookUp
 const lookup = function(email) {
   let arr = [];
@@ -164,7 +168,8 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
   if(lookup(req.body.email)) {
-    if (lookup(req.body.email).password === req.body.password) {
+    const loggedPassword = lookup(req.body.email).password;
+    if (bcrypt.compareSync(req.body.password, loggedPassword)) {
       const value = lookup(req.body.email).id;
       res.cookie('user_id', lookup(req.body.email).id)
       return res.redirect('/urls')
@@ -193,8 +198,9 @@ app.post('/register', (req, res) => {
       return res.send("This Email was reigistered");
     } else {
     const randomID = creatUserRandomID();
-    const shortenedID = generateRandomString()
-    users[randomID] = {id: randomID, email: req.body.email, password: req.body.password}
+    // const shortenedID = generateRandomString()
+    const password = req.body.password;
+    users[randomID] = {id: randomID, email: req.body.email, password:bcrypt.hashSync(password,10)}
     //urlDatabase[shortenedID] = {email: req.body.email, userID:randomID}
     console.log(req.body)
     console.log(users)
