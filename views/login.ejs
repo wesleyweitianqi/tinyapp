@@ -17,19 +17,23 @@
         background-color: green;
         color: white;
       }
+      .rightdisplay {
+        margin-right: 0;
+        max-width:500px;
+      }
     </style>
   </head>
 
   <body>
     <%- include('partials/_header') %>
-    <h1>Register</h1>
+    <h1>login</h1>
     <div class="card text-left">
-      <form method="POST" action="/register">
+      <form method="POST" action="/login">
         <p>Email:</p>
         <div><input name="email" type="email"/></div>
         <p>Passowrd:</p>
         <div><input name="password" type="password"/></div>
-        <button class="button">Register</button>
+        <button class="button">Login</button>
       </form>
   
     </div>

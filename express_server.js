@@ -53,7 +53,8 @@ const creatUserRandomID = function() {
 }
 
 app.get('/', (req,res) => {
-  res.send("Hello!")
+
+  res.render('HomePage', {email: undefined})
 });
 
 app.get('/urls.json', (req,res) => {
@@ -66,14 +67,14 @@ app.get('/urls.json', (req,res) => {
 // });
 
 app.get('/urls', (req,res) => {
-  
   const templateVars = {urls: urlDatabase, email: users[req.cookies.user_id].email};
   res.render('urls_index', templateVars);
 });
 
 //new longUrl input 
 app.get('/urls/new', (req,res) => {
-  const templateVars = {email : users[req.cookies.user_id]['email']}
+  
+  const templateVars = {email : users[req.cookies.user_id].email}
   res.render("urls_new", templateVars);
 })
 
@@ -104,17 +105,19 @@ app.post('/urls/:id/delete',(req,res) => {
   res.redirect('/urls');
 })
 
+app.get('/login', (req, res) => {  
+  res.render('login', {email: undefined})
+})
+
 app.post('/login', (req, res) => {
-  const email = req.body.email;
-  for (let userid in users) {
-    if (users[userid].email === email) {
-      if (users[userid].password === email) {
-        return res.redirect('/register')
-      }
-    } else {
-      res.redirect('/urls');   
+  if(lookup(req.body.email)) {
+    if (lookup(req.body.email).password === req.body.password) {
+      const value = lookup(req.body.email).id;
+      res.cookie('user_id', value)
+      return res.redirect('/urls')
     }
   }
+  return res.redirect('/register')
 })
 
 app.post('/logout', (req, res) => {
@@ -124,8 +127,8 @@ app.post('/logout', (req, res) => {
 })
    
 app.get('/register', (req,res) => {
-  console.log(users)
-  res.render('register')
+  
+  res.render('register', {email: undefined})
 })
 
 app.post('/register', (req, res) => {
@@ -133,11 +136,9 @@ app.post('/register', (req, res) => {
     return res.sendStatus(400).end();
   }
   if (lookup(req.body.email)) {
-    if (lookup(req.body.email).password !== req.body.password) {
+    // if (lookup(req.body.email).password !== req.body.password) {
       return res.sendStatus(400).end();
-    } 
-          
-  } else {
+    } else {
     const randomID = creatUserRandomID();
     users[randomID] = {id: randomID, email: req.body.email, password: req.body.password}
     console.log(req.body)
