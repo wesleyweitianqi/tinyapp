@@ -13,7 +13,12 @@
       .form-inline {
         margin: auto;
       }
+      .card {
+        margin-left: 40px;
+        border: none;
+      }
       .button {
+        margin-top: 20px;
         background-color: green;
         color: white;
       }
@@ -22,7 +27,7 @@
 
   <body>
     <%- include('partials/_header') %>
-    <h1>Register</h1>
+    <h1 class="card">Register</h1>
     <div class="card text-left">
       <form method="POST" action="/register">
         <p>Email:</p>

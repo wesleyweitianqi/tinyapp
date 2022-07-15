@@ -14,20 +14,22 @@
         margin: auto;
       }
       .button {
+        margin-top: 20px;
         background-color: green;
         color: white;
       }
-      .rightdisplay {
-        margin-right: 0;
-        max-width:500px;
+  
+      .card {
+        margin-left: 40px;
+        border: none;
       }
     </style>
   </head>
 
   <body>
     <%- include('partials/_header') %>
-    <h1>login</h1>
     <div class="card text-left">
+      <h1>Login</h1>
       <form method="POST" action="/login">
         <p>Email:</p>
         <div><input name="email" type="email"/></div>
