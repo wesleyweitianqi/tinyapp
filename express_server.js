@@ -4,6 +4,7 @@ const res = require('express/lib/response');
 const cookie = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
+const methodOverride = require('method-override')
 const {getUserByEmail} = require('./helpers.js')
 
 const app = express();
@@ -11,6 +12,7 @@ const port = 8080;
 app.set('view engine', 'ejs');
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
+app.use(methodOverride('X-HTTP-Method-Override'))
 app.use(cookieSession({
   name:'session',
   keys:['wesley', 'jenny']
@@ -125,7 +127,6 @@ app.get('/urls/:id', (req,res) => {
 })
 
 app.post('/urls/:id', (req,res) => {
-  const inputLongUrl = req.body.longURL;
   urlDatabase[req.params.id] = {longURL: req.body.longURL, userID: req.session.user_id}
   res.redirect('/urls');
 })

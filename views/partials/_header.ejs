@@ -13,16 +13,16 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <div class="navbar-nav" style="align-items:center">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         <% if (email) {%>
-            <form method="POST" action="/logout" class="form-inline">
+            <form method="POST" action="/logout" class="form-inline" style="position: absolute; right: 30px;">
               <label>Logged In As <%= email %>！  </label>
               <button>Logout</button>
             </form>
         <% } else {%>
-            <div class="rightdisplay">
+            <div class="rightdisplay form-inline" style="display: flex; position: absolute; right: 30px; ">
               <form method="GET" action="/Register" class="form-inline">
                 <button class="login">Register</button>
               </form>
