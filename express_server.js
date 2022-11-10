@@ -110,7 +110,7 @@ app.get('/urls/new', (req,res) => {
 app.post("/urls/new", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
   let id = req.session.user_id;
-  urlDatabase[generateRandomString()] = {longURL: req.body.longURL, userID : id}
+  urlDatabase[generateRandomString()] = {longURL: `http://${req.body.longURL}`, userID : id}
   res.redirect('/urls'); // Respond with 'Ok' (we will replace this)
 });
 
@@ -127,7 +127,7 @@ app.get('/urls/:id', (req,res) => {
 })
 
 app.post('/urls/:id', (req,res) => {
-  urlDatabase[req.params.id] = {longURL: req.body.longURL, userID: req.session.user_id}
+  urlDatabase[req.params.id] = {longURL: `http://${req.body.longURL}`, userID: req.session.user_id}
   res.redirect('/urls');
 })
 
